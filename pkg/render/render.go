@@ -15,8 +15,8 @@ var functions = template.FuncMap{}
 
 var app *config.AppConfig
 
-// NewTemplates sets the config for the template package
-func NewTemplates(a *config.AppConfig) {
+// SetNewTemplates sets the config for the template package
+func SetNewTemplates(a *config.AppConfig) {
 	app = a
 }
 
@@ -44,13 +44,15 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, templateData *models.Tem
 
 	templateData = AddDefaultData(templateData)
 
-	_ = template.Execute(buf, templateData)
+	err := template.Execute(buf, templateData)
+	if err != nil {
+		fmt.Println("error executing template", err)
+	}
 
-	_, err := buf.WriteTo(w)
+	_, err = buf.WriteTo(w)
 	if err != nil {
 		fmt.Println("error writing template to browser", err)
 	}
-
 }
 
 // CreateTemplateCache creates a template cache as a map
@@ -69,18 +71,17 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 			return cache, err
 		}
 
-		matches, err := filepath.Glob("./templates/*.html")
+		matches, err := filepath.Glob("./templates/layouts/*.html")
 		if err != nil {
 			return cache, err
 		}
 
 		if len(matches) > 0 {
-			ts, err = ts.ParseGlob("./templates/*.html")
+			ts, err = ts.ParseGlob("./templates/layouts/*.html")
 			if err != nil {
 				return cache, err
 			}
 		}
-
 		cache[name] = ts
 	}
 

@@ -22,12 +22,12 @@ func main() {
 		log.Fatal("cannot create template cache")
 	}
 
-	repo := handlers.NewRepo(&app)
-	handlers.NewHandlers(repo)
+	repo := handlers.SetNewRepo(&app)
+	handlers.SetNewHandlers(repo)
 
-	render.NewTemplates(&app)
+	render.SetNewTemplates(&app)
 
-	fmt.Println("Staring application on port ", portNumber)
+	fmt.Println("Staring application on port", portNumber)
 
 	srv := &http.Server{
 		Addr:    portNumber,

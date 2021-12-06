@@ -15,15 +15,15 @@ type Repository struct {
 	App *config.AppConfig
 }
 
-// NewRepo creates a new repository
-func NewRepo(a *config.AppConfig) *Repository {
+// SetNewRepo creates a new repository
+func SetNewRepo(a *config.AppConfig) *Repository {
 	return &Repository{
 		App: a,
 	}
 }
 
-// NewHandlers sets the repository for the handlers
-func NewHandlers(r *Repository) {
+// SetNewHandlers sets the repository for the handlers
+func SetNewHandlers(r *Repository) {
 	Repo = r
 }
 
@@ -39,7 +39,7 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap["test"] = "Hello, again"
 
 	// send data to the template
-	render.RenderTemplate(w, "home.html", &models.TemplateData{
+	render.RenderTemplate(w, "about.html", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }
