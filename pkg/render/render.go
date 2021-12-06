@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"strings"
 )
 
 var functions = template.FuncMap{}
@@ -66,6 +67,8 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 
 	for _, page := range pages {
 		name := filepath.Base(page)
+		withOutExtension := strings.Split(filepath.Base(page), ".")
+
 		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return cache, err
@@ -82,7 +85,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 				return cache, err
 			}
 		}
-		cache[name] = ts
+		cache[withOutExtension[0]] = ts
 	}
 
 	return cache, nil
