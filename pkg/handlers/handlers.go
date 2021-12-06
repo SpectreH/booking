@@ -29,7 +29,7 @@ func SetNewHandlers(r *Repository) {
 
 // Home is the handler for the home page
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home", &models.TemplateData{})
+	render.RenderTemplate(w, "make-reservation", &models.TemplateData{})
 }
 
 // About is the handler for the about page
