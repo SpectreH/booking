@@ -1,0 +1,16 @@
+.footer {
+  height: 5em;
+  background-color: #163b65;
+  margin-top: 1.5em;
+  padding: 1em;
+  color: white;
+  font-size: 80%;
+}
+
+.swal2-html-container {
+  overflow: unset !important;
+}
+
+.swal2-container {
+  z-index: 900 !important;
+}
