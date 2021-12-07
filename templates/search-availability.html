@@ -10,13 +10,13 @@
           <div class="col">
             <div class="mb-3">
               <label for="startDate" class="form-label" nov>Starting Date</label>
-              <input disabled type="text" class="form-control" name="start" id="startDate" name="startDate" required>
+              <input type="text" class="form-control" name="start" id="startDate" name="startDate" autocomplete="off" required>
             </div>
           </div>
           <div class="col">
             <div class="mb-3">
               <label for="endDate" class="form-label">Ending Date</label>
-              <input disabled type="text" class="form-control" name="end" id="endDate" name="endDate" required>
+              <input type="text" class="form-control" name="end" id="endDate" name="endDate" autocomplete="off" required>
             </div>
           </div>
         </div>
@@ -25,4 +25,13 @@
     </div>
   </div>
 </div>
+{{end}}
+
+{{define "js"}}
+<script>
+  const elem = document.getElementById('reservation-dates');
+  const rangepicker = new DateRangePicker(elem, {
+    format: "yyyy-mm-dd"
+  });
+</script>
 {{end}}

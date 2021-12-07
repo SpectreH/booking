@@ -58,3 +58,13 @@ func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, "search-availability", &models.TemplateData{})
 }
+
+// Contact renders the contact page
+func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "contact", &models.TemplateData{})
+}
+
+// Reservation renders the reservation page
+func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "make-reservation", &models.TemplateData{})
+}
