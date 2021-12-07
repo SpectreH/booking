@@ -1,0 +1,28 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h1 class="mt-4">Search for Availability</h1>
+      <form action="reservation.html" method="post" novalidate class="needs-validation">
+        <div class="row" id="reservation-dates">
+          <div class="col">
+            <div class="mb-3">
+              <label for="startDate" class="form-label" nov>Starting Date</label>
+              <input disabled type="text" class="form-control" name="start" id="startDate" name="startDate" required>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="endDate" class="form-label">Ending Date</label>
+              <input disabled type="text" class="form-control" name="end" id="endDate" name="endDate" required>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Search Availability</button>
+      </form>
+    </div>
+  </div>
+</div>
+{{end}}
