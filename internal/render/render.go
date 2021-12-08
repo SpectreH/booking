@@ -1,8 +1,8 @@
 package render
 
 import (
-	"booking/pkg/config"
-	"booking/pkg/models"
+	"booking/internal/config"
+	"booking/internal/models"
 	"bytes"
 	"fmt"
 	"html/template"
@@ -24,6 +24,9 @@ func SetNewTemplates(a *config.AppConfig) {
 }
 
 func AddDefaultData(templateData *models.TemplateData, r *http.Request) *models.TemplateData {
+	templateData.Flash = app.Session.PopString(r.Context(), "flash")
+	templateData.Error = app.Session.PopString(r.Context(), "error")
+	templateData.Warning = app.Session.PopString(r.Context(), "warning")
 	templateData.CSRFToken = nosurf.Token(r)
 	return templateData
 }
