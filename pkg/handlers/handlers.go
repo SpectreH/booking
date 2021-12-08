@@ -29,7 +29,7 @@ func SetNewHandlers(r *Repository) {
 
 // Home is the handler for the home page
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home", &models.TemplateData{})
+	render.RenderTemplate(w, r, "home", &models.TemplateData{})
 }
 
 // About is the handler for the about page
@@ -39,32 +39,40 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap["test"] = "Hello, again"
 
 	// send data to the template
-	render.RenderTemplate(w, "about", &models.TemplateData{
+	render.RenderTemplate(w, r, "about", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }
 
 // Generals renders the room page
 func (m *Repository) Generals(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "generals", &models.TemplateData{})
+	render.RenderTemplate(w, r, "generals", &models.TemplateData{})
 }
 
 // Majors renders the room page
 func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "majors", &models.TemplateData{})
+	render.RenderTemplate(w, r, "majors", &models.TemplateData{})
 }
 
 // Availability renders the search availability page
 func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "search-availability", &models.TemplateData{})
+	render.RenderTemplate(w, r, "search-availability", &models.TemplateData{})
+}
+
+// PostAvailability renders the search availability page
+func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
+	start := (r.Form.Get("start"))
+	end := (r.Form.Get("end"))
+
+	w.Write([]byte(start + end))
 }
 
 // Contact renders the contact page
 func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "contact", &models.TemplateData{})
+	render.RenderTemplate(w, r, "contact", &models.TemplateData{})
 }
 
 // Reservation renders the reservation page
 func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "make-reservation", &models.TemplateData{})
+	render.RenderTemplate(w, r, "make-reservation", &models.TemplateData{})
 }
