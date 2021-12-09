@@ -3,10 +3,10 @@ package handlers
 import (
 	"booking/internal/config"
 	"booking/internal/forms"
+	"booking/internal/helpers"
 	"booking/internal/models"
 	"booking/internal/render"
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -37,14 +37,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 
 // About is the handler for the about page
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	// perform some logic
-	stringMap := make(map[string]string)
-	stringMap["test"] = "Hello, again"
-
-	// send data to the template
-	render.RenderTemplate(w, r, "about", &models.TemplateData{
-		StringMap: stringMap,
-	})
+	render.RenderTemplate(w, r, "about", &models.TemplateData{})
 }
 
 // Generals renders the room page
@@ -84,12 +77,12 @@ func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 
 	out, err := json.MarshalIndent(resp, "", "    ")
 	if err != nil {
-		log.Println(err)
+		helpers.ServerError(w, err)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(out)
-
 }
 
 // Contact renders the contact page
@@ -113,7 +106,7 @@ func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		log.Println(err)
+		helpers.ServerError(w, err)
 		return
 	}
 
@@ -149,7 +142,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) {
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		log.Println("cannot get item from session")
+		m.App.ErrorLog.Println("Cant't get error from session")
 		m.App.Session.Put(r.Context(), "error", "Can't get reservation from session")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return

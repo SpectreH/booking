@@ -16,7 +16,6 @@ func TestNoSurve(t *testing.T) {
 	default:
 		t.Error(fmt.Sprintf("type is not http.Handler, but is %T", v))
 	}
-
 }
 
 func TestLoadSession(t *testing.T) {
@@ -29,5 +28,4 @@ func TestLoadSession(t *testing.T) {
 	default:
 		t.Error(fmt.Sprintf("type is not http.Handler, but is %T", v))
 	}
-
 }
