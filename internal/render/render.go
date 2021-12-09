@@ -4,9 +4,9 @@ import (
 	"booking/internal/config"
 	"booking/internal/models"
 	"bytes"
+	"errors"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -17,6 +17,7 @@ import (
 var functions = template.FuncMap{}
 
 var app *config.AppConfig
+var pathToTemplates = "./templates"
 
 // SetNewTemplates sets the config for the template package
 func SetNewTemplates(a *config.AppConfig) {
@@ -32,7 +33,7 @@ func AddDefaultData(templateData *models.TemplateData, r *http.Request) *models.
 }
 
 // RenderTemplate renders a template
-func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templateData *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templateData *models.TemplateData) error {
 	var templateCache map[string]*template.Template
 
 	if app.UseCache {
@@ -44,7 +45,7 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templat
 
 	template, ok := templateCache[tmpl]
 	if !ok {
-		log.Fatal("Could not get template from template cache")
+		return errors.New("can't get template from cache")
 	}
 
 	buf := new(bytes.Buffer)
@@ -54,19 +55,23 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templat
 	err := template.Execute(buf, templateData)
 	if err != nil {
 		fmt.Println("error executing template", err)
+		return err
 	}
 
 	_, err = buf.WriteTo(w)
 	if err != nil {
 		fmt.Println("error writing template to browser", err)
+		return err
 	}
+
+	return nil
 }
 
 // CreateTemplateCache creates a template cache as a map
 func CreateTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
-	pages, err := filepath.Glob("./templates/*.html")
+	pages, err := filepath.Glob(pathToTemplates + "/*.html")
 	if err != nil {
 		return cache, err
 	}
@@ -80,13 +85,13 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 			return cache, err
 		}
 
-		matches, err := filepath.Glob("./templates/layouts/*.html")
+		matches, err := filepath.Glob(pathToTemplates + "/layouts/*.html")
 		if err != nil {
 			return cache, err
 		}
 
 		if len(matches) > 0 {
-			ts, err = ts.ParseGlob("./templates/layouts/*.html")
+			ts, err = ts.ParseGlob(pathToTemplates + "/layouts/*.html")
 			if err != nil {
 				return cache, err
 			}

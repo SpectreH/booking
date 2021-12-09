@@ -2,7 +2,6 @@ package forms
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 	"strings"
 
@@ -40,7 +39,7 @@ func (f *Form) Required(fields ...string) {
 }
 
 // Has checks if form field is in post and not empty
-func (f *Form) Has(field string, r *http.Request) bool {
+func (f *Form) Has(field string) bool {
 	x := f.Get(field)
 	if x == "" {
 		return false
@@ -50,8 +49,8 @@ func (f *Form) Has(field string, r *http.Request) bool {
 }
 
 // MinLenght checks for string minimum lenght
-func (f *Form) MinLenght(field string, lenght int, r *http.Request) bool {
-	x := r.Form.Get(field)
+func (f *Form) MinLenght(field string, lenght int) bool {
+	x := f.Get(field)
 	if len(x) < lenght {
 		f.Errors.Add(field, fmt.Sprintf("This field must be at least %d characters long", lenght))
 		return false
@@ -61,8 +60,11 @@ func (f *Form) MinLenght(field string, lenght int, r *http.Request) bool {
 }
 
 // IsEmail checks for valid email address
-func (f *Form) IsEmail(field string) {
+func (f *Form) IsEmail(field string) bool {
 	if !govalidator.IsEmail(f.Get(field)) {
 		f.Errors.Add(field, "Invalid email address")
+		return false
 	}
+
+	return true
 }
