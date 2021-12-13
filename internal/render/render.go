@@ -19,8 +19,8 @@ var functions = template.FuncMap{}
 var app *config.AppConfig
 var pathToTemplates = "./templates"
 
-// SetNewTemplates sets the config for the template package
-func SetNewTemplates(a *config.AppConfig) {
+// SetNewRenderer sets the config for the template package
+func SetNewRenderer(a *config.AppConfig) {
 	app = a
 }
 
@@ -82,6 +82,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 
 		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
+			fmt.Println(err)
 			return cache, err
 		}
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"booking/internal/config"
+	driver "booking/internal/driver"
 	"booking/internal/handlers"
 	"booking/internal/helpers"
 	"booking/internal/models"
@@ -23,12 +24,21 @@ var session *scs.SessionManager
 var infoLog *log.Logger
 var errLog *log.Logger
 
+const (
+	// Initialize connection constants.
+	HOST     = "mydemoserver.postgres.database.azure.com"
+	DATABASE = "mypgsqldb"
+	USER     = "mylogin@mydemoserver"
+	PASSWORD = "<server_admin_password>"
+)
+
 // main is the main function
 func main() {
-	err := run()
+	db, err := run()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.SQL.Close()
 
 	srv := &http.Server{
 		Addr:    portNumber,
@@ -42,9 +52,14 @@ func main() {
 	}
 }
 
-func run() error {
+func run() (*driver.DB, error) {
+	var err error
+
 	// what am I going to put in the session
 	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restriction{})
 
 	// change this to true when in production
 	app.UseCache = false
@@ -64,18 +79,26 @@ func run() error {
 
 	app.Session = session
 
-	var err error
+	// connect to database
+	log.Println("Connecting to database...")
+	// var connectionString string = fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=require", HOST, USER, PASSWORD, DATABASE)
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=booking user=spectre password=admin sslmode=require")
+	if err != nil {
+		log.Fatal("Cannot connect to database! Dying...")
+	}
+	log.Println("Connected to database!")
+
 	app.TemplateCache, err = render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
-		return err
+		return nil, err
 	}
 
-	repo := handlers.SetNewRepo(&app)
+	repo := handlers.SetNewRepo(&app, db)
 	handlers.SetNewHandlers(repo)
 
-	render.SetNewTemplates(&app)
+	render.SetNewRenderer(&app)
 	helpers.SetNewHelpers(&app)
 
-	return nil
+	return db, nil
 }
